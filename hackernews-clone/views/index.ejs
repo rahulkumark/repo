@@ -1,0 +1,54 @@
+<% include partials/header %>
+<h1></h1>
+<% if(errors){ %>
+  <ul>
+    <% errors.forEach(function(error){ %>
+      <li><%= error.msg %> </li>
+    <% }) %>
+  </ul>
+<% } %>
+<b>Login</b>
+<br>
+<br>
+<form class="" action="/users/login" method="post">
+<table>
+
+  <tr>
+    <td><label>username: </label></td>
+    <td><input type="text" name="uname" value=""></td>
+  </tr>
+  <tr>
+    <td><label>password: </label></td>
+    <td><input type="text" name="password" value=""></td>
+  </tr>
+</table>
+<br>
+  <input type="submit" name="Add" value="login">
+</form>
+<br>
+<br>
+<a href="#">Forgot your password?</a>
+<br>
+<br>
+<b>Create Account</b>
+<br>
+<br>
+<form class="" action="/users/register" method="post">
+<table>
+    <tr>
+    <td><label>username: </label></td>
+    <td><input type="text" name="cname" value=""></td>
+  </tr>
+  <tr>
+    <td><label>password: </label></td>
+    <td><input type="text" name="cpassword" value=""></td>
+  </tr>
+</table>
+<br>
+<input type="submit" name="Add" value="create account">
+</form>
+
+
+
+
+<% include partials/footer %>
