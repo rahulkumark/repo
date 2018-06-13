@@ -10,16 +10,16 @@
 <b>Login</b>
 <br>
 <br>
-<form class="" action="/users/login" method="post">
+<form class="" action="/login" method="post">
 <table>
 
   <tr>
     <td><label>username: </label></td>
-    <td><input type="text" name="uname" value=""></td>
+    <td><input type="text" name="uname" value="" autocomplete="off"></td>
   </tr>
   <tr>
     <td><label>password: </label></td>
-    <td><input type="text" name="password" value=""></td>
+    <td><input type="text" name="password" value="" autocomplete="off"></td>
   </tr>
 </table>
 <br>
@@ -33,22 +33,17 @@
 <b>Create Account</b>
 <br>
 <br>
-<form class="" action="/users/register" method="post">
+<form class="" action="/register" method="post">
 <table>
     <tr>
     <td><label>username: </label></td>
-    <td><input type="text" name="cname" value=""></td>
+    <td><input type="text" name="cname" value="" autocomplete="off"></td>
   </tr>
   <tr>
     <td><label>password: </label></td>
-    <td><input type="text" name="cpassword" value=""></td>
+    <td><input type="text" name="cpassword" value="" autocomplete="off"></td>
   </tr>
 </table>
 <br>
 <input type="submit" name="Add" value="create account">
 </form>
-
-
-
-
-<% include partials/footer %>

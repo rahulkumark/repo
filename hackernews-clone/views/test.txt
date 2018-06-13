@@ -1,0 +1,7 @@
+db.posts.insert([
+   {
+      title: 'MongoDB Overview',
+      url: 'http://www.tutorialspoint.com',
+      text: 'learn mongodb'
+   },
+])

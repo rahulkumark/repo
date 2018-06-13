@@ -4,39 +4,25 @@ var path = require("path");
 var expressValidator = require("express-validator")
 var mongojs = require('mongojs')
 var db = mongojs('userapp', ['users']);
+var submitdb = mongojs('submitpost', ['posts']);
 
 var app = express();
 const port = 3000;
 
-// var requestTime = function (req, res, next) {
-//   req.requestTime = Date.now()
-//   next()
-// }
-//
-// app.use(requestTime)
-
-// bodyParser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
 
-// set static path
 app.use(express.static(path.join(__dirname, 'public')));
-
-// view engine
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
-//global variables
 app.use(function(req, res, next) {
   res.locals.errors = null;
   next();
-
 });
-
-//expressValidator middleware
 
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
@@ -55,99 +41,100 @@ app.use(expressValidator({
   }
 }));
 
-// var users = [
-//   {
-//     name : 'RK',
-//     password : 1,
-//   },
-//   {
-//     name : 'PT',
-//     password : 2,
-//   },
-//   {
-//     name : 'vikas',
-//     password : 3,
-//   }
-// ]
+//something
 
-app.get('/', function(req, res,docs) {
 
+app.get('/login', function(req, res, docs) {
   res.render('index');
-
 })
 
-app.post('/users/login', function(req, res ,docs) {
-
-  db.users.find(function(err, docs) {
-
-    var checkname = req.body.uname;
-    var checkpass = req.body.password;
-
-    // console.log(checkname,checkpass);
-
-    for (var i = 0; i < docs.length; i++) {
-
-      if (checkname == docs[i]['name'] && checkpass == docs[i]['password']){
-
-        console.log("authentication SUCCESS");
-        // console.log(checkname,checkpass);
-        // console.log(docs[i]['name'],docs[i]['password']);
-        break ;
-
-
-      }
-      // else {
-      //   // console.log(checkname,checkpass);
-      //   // console.log(docs[i]['name'],docs[i]['password']);
-      //   console.log("auth error");
-      // }
-    }
-
-
-  })
-
-res.redirect('/');
-
-
+app.get('/submit', function(req, res, docs) {
+  res.render('submit');
 })
 
-app.post('/users/register', function(req, res ,docs) {
-
-  req.checkBody('cname', 'name is required').notEmpty();
-  req.checkBody('cpassword', 'password is required').notEmpty();
-
-  var errors = req.validationErrors();
-
-  if (errors) {
-    res.render('index', {
-      title: 'customers',
-      users: docs,
-      errors: errors,
-
-    });
-    // console.log("ERROR");
-
-  } else {
-    var newuser = {
-      name: req.body.cname,
-      password: req.body.cpassword,
-    }
-
-    // console.log(newuser);
-
-    db.users.insert(newuser, function(err, result) {
-      if (err) {
-        // console.log(err);
-      } else {
-        res.redirect('/');
-      }
-
+app.get('/', function(req, res) {
+      submitdb.posts.find(function(err, docs) {
+        res.render('home', {
+          title: 'posts',
+          posts: docs,
+        });
+      })
     })
-  }
-  // console.log(newuser);
-})
+
+      app.post('/login', function(req, res, docs) {
+        db.users.find(function(err, docs) {
+          var checkname = req.body.uname;
+          var checkpass = req.body.password;
+          for (var i = 0; i < docs.length; i++) {
+
+            if (checkname == docs[i]['name'] && checkpass == docs[i]['password']) {
+              console.log("authentication SUCCESS");
+              res.redirect('/')
+            }
+          }
+        })
+      })
+
+      app.post('/register', function(req, res, docs) {
+
+        req.checkBody('cname', 'name is required').notEmpty();
+        req.checkBody('cpassword', 'password is required').notEmpty();
+
+        var errors = req.validationErrors();
+
+        if (errors) {
+          res.render('index', {
+            title: 'customers',
+            users: docs,
+            errors: errors,
+
+          });
+        } else {
+          var newuser = {
+            name: req.body.cname,
+            password: req.body.cpassword,
+          }
+          db.users.insert(newuser, function(err, result) {
+            if (err) {} else {
+              res.redirect('/');
+            }
+          });
+        }
+      })
+
+      app.post('/r', function(req, res, docs) {
+
+        req.checkBody('title', 'title is required').notEmpty();
+        req.checkBody('text', 'text is required').notEmpty();
+
+        var errors = req.validationErrors();
+
+        if (errors) {
+          res.render('submit', {
+            title: 'posts',
+            posts: docs,
+            errors: errors,
+
+          });
+        } else {
+          var newpost = {
+            title: req.body.title,
+            text: req.body.text,
+          }
+          //  console.log(newpost);
+          submitdb.posts.insert(newpost, function(err, result) {
+            if (err) {} else {
+              res.redirect('/');
+            }
+          });
+        }
 
 
-app.listen(port, function() {
-  // console.log(`server started on port ${port}`);
-});
+
+        // submitdb.posts.find(function(err,docs) {
+        // console.log(docs);
+        // })
+
+      })
+
+      app.listen(port, function() {});
